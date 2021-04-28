@@ -12,10 +12,10 @@ class NumberWithUnits
 private:
 	double amount;
 	string unit;
-	double fromTo(string from, string to)const;
-	double RecfromTo(string from, string to)const;
-	double conversion(string from, string to)const;
-	 bool checkUnitExists(string un);
+	double fromTo(const string& from, const string& to)const;
+	double RecfromTo(const string& from, const string&to)const;
+	double conversion(const string& from, const string& to)const;
+	 bool checkUnitExists(const string& un);
 public:
 
 	static map<string, map<string, double>> units;
@@ -61,13 +61,13 @@ public:
 	NumberWithUnits& operator--();
 	
 	// compare operators
-	bool operator ==(const NumberWithUnits &b) const;
-	bool operator ==( NumberWithUnits &b) const;
+	bool operator ==(const NumberWithUnits &other) const;
+	bool operator ==( NumberWithUnits &other) const;
 	bool operator !=(const NumberWithUnits &b) const;
-	bool operator >=(const NumberWithUnits &b) const;
-	bool operator <=(const NumberWithUnits &b) const;
-	bool operator >(const NumberWithUnits &b) const;
-	bool operator <(const NumberWithUnits &b) const;
+	bool operator >=(const NumberWithUnits &other) const;
+	bool operator <=(const NumberWithUnits &other) const;
+	bool operator >(const NumberWithUnits &other) const;
+	bool operator <(const NumberWithUnits &other) const;
 
 };
 	 ostream& operator<<(ostream& os, const NumberWithUnits& num);

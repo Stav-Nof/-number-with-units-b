@@ -5,48 +5,62 @@ map<string, map<string, double>> NumberWithUnits::units;
 
 const double EPS = 0.0001;
 
- bool NumberWithUnits::checkUnitExists(string un)
+ bool NumberWithUnits::checkUnitExists(const string& un)
 {
 	for(auto elem : units)
 	{
 		if(elem.first == un)
+		{
 		return true;
+		}
+		
 		for(auto elem2 : elem.second)
 		{
 			if(elem2.first == un)
-			return true;
+			{
+				return true;
+			}
 		}
+		
 	}
 	return false;
 }
-double NumberWithUnits::fromTo(string from, string to)const
+double NumberWithUnits::fromTo(const string& from, const string& to)const
 {
    if(from == to)
+   {
         return 1;
+   }
     if(units.find(to) != units.end())
     {
         //units[to] -> map (string(from), amount)
         if(units[to].find(from) != units[to].end())
+        {
             return 1 / units[to][from];
+        }
     }
     if(units.find(from) != units.end())
     {
         //units[from] -> map (string(to), amount)
          if(units[from].find(to) != units[from].end())
+         {
             return units[from][to];
+         }
     }
     //the belong to someone
     return -1;
     //else return -1 (error)
 }
 
-double NumberWithUnits::RecfromTo(string from, string to)const
+double NumberWithUnits::RecfromTo(const string& from, const string& to)const
 {
     //example: meter + dcm 
     //from dcm to meter
     //try to get from meter (to) to dcm (from)
     if(from == to)
+    {
         return 1;
+    }
     // cout << "1. from: " << from << ". to: " << to<< endl ;
     double res = fromTo(from, to);
     if(res != -1)
@@ -54,8 +68,7 @@ double NumberWithUnits::RecfromTo(string from, string to)const
         // cout << "2. from: " << from << ". to: " << to << ". res:" << res<< endl ;
         return res;
     }
-    else
-    {
+   
         // cout << "3.." << endl;
         for(auto elem : units[from])
         {
@@ -64,30 +77,38 @@ double NumberWithUnits::RecfromTo(string from, string to)const
             {
             // cout << "price: " << price <<  endl;
             // cout << "many: " << fromTo(from, elem.first) << endl;
-            if(price != -1)
+           
                 return price * fromTo(from, elem.first);
-            }
+            
+    		 }
         }
-    }
     return -1;
 }
-double NumberWithUnits::conversion(string from, string to)const
+double NumberWithUnits::conversion(const string& from, const string& to)const
 {
     double result = fromTo(from, to);
     if(result != -1)
+    {
         return result;
+    }
     result = RecfromTo(from, to);
     if(result != -1)
+    {
         return result;
+    }
     result = RecfromTo(to, from);
     if(result != -1)
+    {
         return 1 / result;
+    }
     return -1;
 }
  void NumberWithUnits::read_units(ifstream &file)
 	{
 	    if(!file.is_open())
+	    {
 	        return;
+	    }
 	    while(!file.eof())
 	    {
 	        double amount1, amount2;
@@ -97,7 +118,7 @@ double NumberWithUnits::conversion(string from, string to)const
 	        //cout << amount1 <<" " << unit1;
 	        //cout << endl << amount2 << unit2 << endl;
 	        amount2 = amount2 / amount1;
-	        amount1 = 1;
+	        
 	        if (units.find(unit1) == units.end()) 
 	        {
 	            map<string, double> valuesMap;
@@ -149,8 +170,10 @@ double NumberWithUnits::conversion(string from, string to)const
 	}
 	NumberWithUnits::NumberWithUnits(double amount, const string& unit):amount(amount), unit(unit)
 	{
-	    if(checkUnitExists(unit) == false || unit == "")
+	    if(!checkUnitExists(unit) || unit.empty())
+	    {
 	    	throw invalid_argument("Unit does not exist");
+	    }
 	}
 		 ostream& ariel::operator<<(ostream& os, const NumberWithUnits& num)
 	 {
@@ -159,8 +182,10 @@ double NumberWithUnits::conversion(string from, string to)const
 	 }
 	 	NumberWithUnits& NumberWithUnits::operator=(const NumberWithUnits &other)
 	 	{
-	 		if(checkUnitExists(other.getUnit()) == false)
+	 		if(!checkUnitExists(other.getUnit()))
+	 		{
 	 			throw invalid_argument("unit does not exist");
+	 		}
 	 		this->setAmount(other.getAmount());
 	 		this->setUnit(other.getUnit());
 	 		return *this;
@@ -324,7 +349,7 @@ double NumberWithUnits::conversion(string from, string to)const
 		 std::istream   &ariel::operator>>(std::istream   &in, NumberWithUnits  &other)
 	{
 	    double num = 0;
-	    string stnum = "";
+	    string stnum;
 	    char ch = ' ';
 	    in.get(ch);
 	     while(ch != '[')
@@ -334,11 +359,13 @@ double NumberWithUnits::conversion(string from, string to)const
 	    }
 	    num = stod(stnum);
 	    in.get(ch);
-	    string type = "";
+	    string type;
 	    while(ch != ']')
 	    {
 	        if(ch != ' ')
+	        {
 	            type += ch;
+	        }
 	         in.get(ch);
 	    }
 	    NumberWithUnits cop(num, type);
