@@ -324,26 +324,15 @@ double NumberWithUnits::conversion(string from, string to)const
 		 std::istream   &ariel::operator>>(std::istream   &in, NumberWithUnits  &other)
 	{
 	    double num = 0;
+	    string stnum = "";
 	    char ch = ' ';
 	    in.get(ch);
 	     while(ch != '[')
 	    {
-	        
-	        if(ch != ' ')
-	        {
-	            if(ch < '0' || ch > '9')
-	            {
-	               // cout << "error: " << ch << "." << endl;
-	                throw invalid_argument("Invalid input!!");
-	            }
-	           else
-	           {
-	               num *= 10;
-	               num += ch - '0';
-	           }
-	        }
+	        stnum += ch;
 	        in.get(ch);
 	    }
+	    num = stod(stnum);
 	    in.get(ch);
 	    string type = "";
 	    while(ch != ']')
